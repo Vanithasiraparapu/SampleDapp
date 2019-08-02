@@ -1,0 +1,114 @@
+<html>
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/web3@0.20.1/dist/web3.min.js"></script>
+</head>
+<body>
+
+ <label for="number1">First Number</label>
+                <input type="text" class="form-control" id="number1" placeholder="number1" required>
+
+ <label for="number2">Second Number</label>
+                <input type="text" class="form-control" id="number2" placeholder="number2" required>
+
+ <button id="button" class="btn btn-primary btn-lg btn-block">Register
+            </button>
+            
+</body>
+<script>
+		// create a web3 object connected to our NodETH node
+		var web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+		console.log("all acounts",web3.eth.accounts);
+				console.log("all acounts",web3.eth.accounts[0]);
+var addition;
+      async function init(){
+        var accounts = await web3.eth.accounts;
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+        var additionContract = web3.eth.contract([
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getValues",
+		"outputs": [
+			{
+				"name": "_result",
+				"type": "int256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_number1",
+				"type": "int256"
+			},
+			{
+				"name": "_number2",
+				"type": "int256"
+			}
+		],
+		"name": "setValues",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "number2",
+		"outputs": [
+			{
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "number1",
+		"outputs": [
+			{
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]);
+          addition = additionContract.at('0x19ea9194e7f6ace316f11af0932a6e649e7c9fd0');
+       /* console.log("*******",addition.setValues(1,2));
+        console.log("*******",addition.getValues());*/
+        console.log("Sum: "+addition.getValues());
+/*call().then(function(result){
+        console.log("2")
+          document.getElementById('number1').textContent = result[0];
+          document.getElementById('number2').textContent =result[1];
+          console.log("3")
+        });*/
+        
+      }
+      init();
+      async function register(){
+        var number1 = document.getElementById('number1').value;
+//console.log("number1", number1)
+        var number2 = document.getElementById('number2').value;
+//console.log("number2",number2)
+        console.log("Result: "+addition.setValues(number1,number2));
+	console.log("Sum: "+addition.getValues());
+//.send({from: web3.eth.defaultAccount, gas:1000000}).then(console.log);
+      }
+
+      document.getElementById('button').addEventListener('click', register);
+		
+	</script>
+</html>
